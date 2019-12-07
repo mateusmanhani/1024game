@@ -1,0 +1,235 @@
+import java.util.Random;
+import java.io.*;
+import java.util.Scanner;
+ 
+	
+		
+
+public class Game {	
+	
+	//created scanner and random obj within the class so it is accessible in all methods
+	static Scanner in = new Scanner(System.in);
+	static Random rand = new Random();
+	
+	//declare 2D array in the class so it exists in all methods
+	static int[][] arrGrid;
+	
+	public static void main(String[] args) {
+		
+		int size = formGrid(2);
+		
+		//Gives user directions which he can "move"
+		System.out.println("Pick a number and press enter");
+		System.out.println("1. UP");
+		System.out.println("2. DOWN");
+		System.out.println("3. LEFT");
+		System.out.println("4. RIGHT");
+		
+		int direction = in.nextInt();
+		
+		if(direction == 1) {
+			moveUp();
+		}
+		
+		if(direction == 2) {
+			moveDown();
+		}
+		
+		if(direction == 3) {
+			moveLeft();
+		}
+		
+		if(direction == 4) {
+			moveRight();
+		}
+		
+		addNumberToGrid(size);
+		
+		}
+	
+		
+	
+	// This method forms the initial grid
+	public static int formGrid(int number) {
+		System.out.println("Enter the size of your grid from 4 to 8 and press enter:");
+		
+		int size = in.nextInt();
+		
+		arrGrid = new int [size][size];
+		
+		for(int row=0; row < arrGrid.length; row++) {
+			
+			for(int colum=0 ; colum<arrGrid[row].length ; colum++) {
+				
+				if(number > 0 && arrGrid[row][colum]==0) {
+					int random = rand.nextInt(3);
+					
+					if(random==0) {
+					
+						arrGrid[row][colum]=1;
+				
+						number--;
+					}
+			}
+				System.out.print(arrGrid[row][colum]);
+			}
+			System.out.println("");
+		}
+		
+		
+		return size;
+	}
+	
+	public static void addNumberToGrid(int size) {
+		int[] freeRow = new int[size*size];
+		int[] freeColum = new int [size*size];
+		
+		boolean gameOver = false;
+		
+		for(int row=0; row < arrGrid.length; row++) {
+			
+			for(int colum=0 ; colum<arrGrid[row].length ; colum++) {
+					
+				if(arrGrid[row][colum] == 0) {
+						
+					for (int j = 0; j < size*size; j++) {
+							
+						freeRow[j] = row;
+						freeColum[j] = colum;
+					}
+				}	
+			}
+		}
+		
+		int random = rand.nextInt(size*size);
+		
+		arrGrid[freeRow[random]][freeColum[random]] = 1;
+		
+		for (int row = 0; row < arrGrid.length; row++) {
+			
+			for(int colum = 0; colum<arrGrid[row].length; colum++) {
+				
+				System.out.print(arrGrid[row][colum]);
+				
+			}
+			
+			System.out.println("");
+		}
+	}
+	
+		
+	//This method moves all of the tiles to the right by adding alike numbers and reassigning them
+	public static void moveRight() {
+		
+		for(int row=0; row < arrGrid.length; row++) {
+			
+			for(int colum = arrGrid[row].length-1  ; colum > 0  ; colum--) {
+				
+				if(arrGrid[row][colum] == 0 && arrGrid[row][colum-1] != 0) {
+					arrGrid[row][colum] = arrGrid[row][colum-1]; 
+					arrGrid[row][colum-1] = 0;
+				}
+				
+				
+							// sums numbers of same value.
+				else if(arrGrid[row][colum]!=0 && arrGrid[row][colum-1]==arrGrid[row][colum]) {
+					
+					int sum = arrGrid[row][colum] + arrGrid[row][colum-1];
+					arrGrid[row][colum] = sum;
+					arrGrid[row][colum-1] = 0;
+					
+				}
+			}
+		}
+	}
+	
+	public static void moveLeft() {
+		
+		for(int row=0; row < arrGrid.length; row++) {
+			
+			for(int colum = 0  ; colum <arrGrid[row].length-1  ; colum++) {
+				
+				//pull next number if the current index of the array is 0
+				if(arrGrid[row][colum] == 0 & arrGrid[row][colum+1] != 0) {
+					arrGrid[row][colum] = arrGrid[row][colum+1]; 
+					arrGrid[row][colum+1] = 0;
+				}
+				
+				
+				//merge equal numbers
+				else if(arrGrid[row][colum]!=0 && arrGrid[row][colum+1]==arrGrid[row][colum]) {
+					
+					int sum = arrGrid[row][colum] + arrGrid[row][colum+1];
+					arrGrid[row][colum] = sum;
+					arrGrid[row][colum+1] = 0;
+							
+				}
+			}
+		}
+	}
+	
+	public static void moveDown() {
+		
+		int row=arrGrid.length-1;
+		int colum = 0;
+		
+		while(colum < arrGrid[row].length) {
+			
+			while(row > 0) {
+				
+				//pull next number if the current index of the array is 0
+				if(arrGrid[row][colum] == 0 & arrGrid[row-1][colum] != 0) {
+					
+					arrGrid[row][colum] = arrGrid[row-1][colum];
+					arrGrid[row-1][colum]= 0;
+				}
+				
+				//merge equal numbers
+				else if(arrGrid[row][colum] != 0 & arrGrid[row-1][colum] == arrGrid[row][colum]) {
+					
+					int sum = arrGrid[row][colum] + arrGrid[row-1][colum];
+					arrGrid[row][colum] = sum;
+					arrGrid[row][colum-1] = 0;
+					
+				}
+				
+				row--;
+			}
+			row = arrGrid.length-1;
+			colum++;
+		}
+	}
+	
+	public static void moveUp() {
+		
+		int row=0;
+		int colum = 0;
+		
+		while(colum < arrGrid[row].length) {
+			
+			while(row < arrGrid.length-1) {
+				
+				//pull next number if the current index of the array is 0
+				if(arrGrid[row][colum] == 0 & arrGrid[row+1][colum] != 0) {
+					
+					arrGrid[row][colum] = arrGrid[row+1][colum];
+					arrGrid[row+1][colum]= 0;
+				}
+				
+				//merge equal numbers
+				else if(arrGrid[row][colum] != 0 & arrGrid[row+1][colum] == arrGrid[row][colum]) {
+					
+					int sum = arrGrid[row][colum] + arrGrid[row+1][colum];
+					arrGrid[row][colum] = sum;
+					arrGrid[row][colum+1] = 0;
+					
+				}
+				
+				row++;
+			}
+			row = 0;
+			colum++;
+		}
+	}
+	
+}
