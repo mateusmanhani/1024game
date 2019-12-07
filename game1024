@@ -84,8 +84,6 @@ public class Game {
 		int[] freeRow = new int[size*size];
 		int[] freeColum = new int [size*size];
 		
-		boolean gameOver = false;
-		
 		for(int row=0; row < arrGrid.length; row++) {
 			
 			for(int colum=0 ; colum<arrGrid[row].length ; colum++) {
@@ -101,20 +99,36 @@ public class Game {
 			}
 		}
 		
-		int random = rand.nextInt(size*size);
+		boolean empty = true;
 		
-		arrGrid[freeRow[random]][freeColum[random]] = 1;
-		
-		for (int row = 0; row < arrGrid.length; row++) {
-			
-			for(int colum = 0; colum<arrGrid[row].length; colum++) {
-				
-				System.out.print(arrGrid[row][colum]);
-				
+		for (int i : freeRow) {
+			if(freeRow[i] != 0) {
+				empty = false;
+				break;
 			}
-			
-			System.out.println("");
 		}
+		
+		if (empty == false) {
+			int random = rand.nextInt(size*size);
+		
+			arrGrid[freeRow[random]][freeColum[random]] = 1;
+		
+			for (int row = 0; row < arrGrid.length; row++) {
+			
+				for(int colum = 0; colum<arrGrid[row].length; colum++) {
+				
+					System.out.print(arrGrid[row][colum]);
+				
+				}
+			
+				System.out.println("");
+			}
+		}
+		
+		else {
+			System.out.println("Game Over");
+		}
+		
 	}
 	
 		
